@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,26 +30,25 @@ import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
+
     private static final String ENDPOINT = "https://api.producthunt.com/v1/";
+
     private API api;
     private Product product;
+    private boolean isViewingProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         ImageView kitty_button = (ImageView) findViewById(R.id.phkitty_button);
-        kitty_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getNewProduct();
-            }
-        });
 
         Animation hoverAnimation = AnimationUtils.loadAnimation(this,
                 R.anim.hover_anim);
@@ -68,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void getNewProduct() {
+    public void getNewProduct(View v) {
+        isViewingProduct = true;
         api.getProduct(getRandomDay(), new Callback<JsonObject>() {
                     @Override
                     public void success(JsonObject jsonObject, Response response) {
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                                     .replace(R.id.container,
                                             WebViewFragment.newInstance(product.getRedirect_url()))
                                     .commit();
+                            invalidateOptionsMenu();
                         }
                     }
 
@@ -101,25 +104,47 @@ public class MainActivity extends AppCompatActivity {
     @NonNull
     private String getRandomDay() {
         Random random = new Random();
+
         return String.valueOf(random.nextInt((365 - 1) + 1) + 1);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        if (isViewingProduct) {
+            getMenuInflater().inflate(R.menu.menu_main_product_view, menu);
+            return true;
+        } else {
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+            return true;
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_new:
-                getNewProduct();
+            case R.id.action_load_discussion:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container,
+                                WebViewFragment.newInstance(product.getDiscussion_url()))
+                        .commit();
                 return true;
-            case R.id.action_web:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(product.getRedirect_url())));
+            case R.id.action_product_web:
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(product.getRedirect_url())));
+
+                return true;
+            case R.id.action_discussion_web:
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(product.getDiscussion_url())));
+                return true;
+            case R.id.action_about:
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                AboutFragment dialog = AboutFragment
+                        .newInstance();
+                dialog.show(fragmentManager, null);
                 return true;
             default:
+
                 return super.onOptionsItemSelected(item);
         }
     }

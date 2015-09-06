@@ -1,13 +1,10 @@
 <resources>
     <string name="app_name">PH Roulette</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="action_new">New Product</string>
-    <string name="action_web">Open in Web</string>
-    <string name="spin_button_text">Spin</string>
     <string name="error">Sorry, there was an error loading this product.</string>
+    <string name="action_product_web">View Product on Web</string>
+    <string name="action_discussion_web">View Discussion on Web</string>
+    <string name="action_load_discussion">View PH Discussion</string>
+    <string name="action_about">About</string>
 </resources>
