@@ -2,9 +2,13 @@
 
 PH Roulette is an open source [Product Hunt](http://www.producthunt.com/) product viewer for Android.
 
+[APK](http://trevorhalvorson.com/apps/ph-roulette-app-release.apk)
+
 Inspired by [entroPHy](http://entrophy.goel.im/) by [Karan Goel](https://github.com/karan)
 
-Source on GitHub: [PH Roulette](https://github.com/trevorhalvorson/PHRoulette)
+![ScreenShot](/screenshots/screenshot_main.png)
+
+![ScreenShot](/screenshots/screenshot_ph.png)
 
 # Contact
 
