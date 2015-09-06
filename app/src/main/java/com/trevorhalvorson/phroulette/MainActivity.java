@@ -4,11 +4,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -23,11 +28,7 @@ import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-
     private static final String ENDPOINT = "https://api.producthunt.com/v1/";
-    public static final String API_KEY = "0d7c7b0716d03845c56d5f208096e92d229da39fef68f99d3fdbc4673a0fda86";
-    public static final String API_SECRET = "845fbef880d2b38bb449925c58ad4ce3037d2c03ee8d82af0fcc2015be390a69";
-    public static final String DEVELOPER_TOKEN = "22e4a0cfd1095acf974c87ff36e793f93ab6e4c218358036b2add75064ecf7ba";
     private API api;
     private Product product;
 
@@ -35,24 +36,36 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
 
-        if (savedInstanceState == null) {
-            Log.i(TAG, "onCreate ");
-            RestAdapter restAdapter = new RestAdapter.Builder()
-                    .setEndpoint(ENDPOINT)
-                    .setRequestInterceptor(new RequestInterceptor() {
-                        @Override
-                        public void intercept(RequestFacade request) {
-                            request.addHeader("Authorization", "Bearer " + DEVELOPER_TOKEN);
-                        }
-                    })
-                    .build();
+        ImageView kitty_button = (ImageView) findViewById(R.id.phkitty_button);
+        kitty_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getNewProduct();
+            }
+        });
 
-            api = restAdapter.create(API.class);
-        }
+        Animation hoverAnimation = AnimationUtils.loadAnimation(this,
+                R.anim.hover_anim);
+        kitty_button.setAnimation(hoverAnimation);
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(ENDPOINT)
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade request) {
+                        request.addHeader("Authorization", "Bearer " +
+                                getResources().getString(R.string.token));
+                    }
+                })
+                .build();
+
+        api = restAdapter.create(API.class);
+
     }
 
     private void getNewProduct() {
@@ -62,11 +75,13 @@ public class MainActivity extends AppCompatActivity {
                         if (jsonObject != null && jsonObject.has("posts")) {
                             JsonArray products = jsonObject.getAsJsonArray("posts");
                             Random random = new Random();
-                            JsonObject object = products.get(random.nextInt(products.size())).getAsJsonObject();
+                            JsonObject object = products
+                                    .get(random.nextInt(products.size()))
+                                    .getAsJsonObject();
                             product = new Product(object);
                             getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.container, WebViewFragment
-                                            .newInstance(product.getRedirect_url()))
+                                    .replace(R.id.container,
+                                            WebViewFragment.newInstance(product.getRedirect_url()))
                                     .commit();
                         }
                     }
@@ -74,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void failure(RetrofitError error) {
                         Log.i(TAG, "error Message " + error.getMessage());
+                        Snackbar.make(findViewById(R.id.container),
+                                R.string.error,
+                                Snackbar.LENGTH_LONG).show();
                     }
                 }
 

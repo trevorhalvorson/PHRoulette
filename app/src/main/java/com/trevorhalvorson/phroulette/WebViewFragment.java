@@ -4,7 +4,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,23 +31,14 @@ public class WebViewFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-        Log.i(TAG, "onCreate WebView");
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setRetainInstance(true);
         View rootView = inflater.inflate(R.layout.fragment_web_view, container, false);
-
         progressBar =
                 (ProgressBar) rootView.findViewById(R.id.web_view_progress_bar);
         progressBar.setMax(100);
-        progressBar.getIndeterminateDrawable()
-                .setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         progressBar.getProgressDrawable()
-                .setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+                .setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
         webView = (WebView) rootView.findViewById(R.id.web_view);
         webView.loadUrl(getArguments().getString("url"));
@@ -62,6 +53,7 @@ public class WebViewFragment extends Fragment {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
+
                 return true;
             }
         });
@@ -82,10 +74,31 @@ public class WebViewFragment extends Fragment {
         });
         webView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+                return false;
+            }
+        });
+        webView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    WebView webView = (WebView) v;
+
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_BACK:
+                            if (webView.canGoBack()) {
+                                webView.goBack();
+                                return true;
+                            }
+                            break;
+                    }
+                }
+
                 return false;
             }
         });
 
         return rootView;
     }
+
 }
