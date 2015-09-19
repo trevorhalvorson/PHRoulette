@@ -29,7 +29,7 @@ public class AboutFragment extends DialogFragment {
                 .inflate(R.layout.dialog_about, null);
 
         TextView aboutTextView = (TextView) v.findViewById(R.id.about_text_view);
-        aboutTextView.setText("PH Roulette is an open source ProductHunt.com product viewer.");
+        aboutTextView.setText(R.string.about_text);
 
         return new AlertDialog.Builder(getActivity())
                 .setView(v)

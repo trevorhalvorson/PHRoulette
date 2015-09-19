@@ -1,5 +1,4 @@
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,29 +11,19 @@
 
         <include
             android:id="@+id/toolbar_main"
-            layout="@layout/toolbar"/>
+            layout="@layout/toolbar" />
 
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar_main"
             android:background="@color/colorAccent"
-            android:foreground="?android:windowContentOverlay"
-            android:layout_below="@+id/toolbar_main">
-
-            <ImageView
-                android:id="@+id/phkitty_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:onClick="getNewProduct"
-                android:src="@drawable/phkitty"/>
-
-        </FrameLayout>
+            android:foreground="?android:windowContentOverlay" />
     </RelativeLayout>
 
     <include
         android:id="@+id/fab"
-        layout="@layout/fab"/>
+        layout="@layout/fab" />
 
 </android.support.design.widget.CoordinatorLayout>

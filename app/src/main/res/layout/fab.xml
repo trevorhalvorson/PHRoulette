@@ -8,6 +8,5 @@
     android:layout_alignParentRight="true"
     android:layout_gravity="end|bottom"
     android:layout_margin="16dp"
-    android:onClick="getNewProduct"
     android:src="@drawable/ic_autorenew_white_24dp"
     app:backgroundTint="@color/colorAccent"/>

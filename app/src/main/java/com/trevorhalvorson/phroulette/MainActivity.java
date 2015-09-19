@@ -9,13 +9,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -29,8 +25,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     private static final String ENDPOINT = "https://api.producthunt.com/v1/";
 
     private API api;
@@ -47,12 +41,12 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.app_name);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        ImageView kitty_button = (ImageView) findViewById(R.id.phkitty_button);
-
-        Animation hoverAnimation = AnimationUtils.loadAnimation(this,
-                R.anim.hover_anim);
-        kitty_button.setAnimation(hoverAnimation);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getNewProduct();
+            }
+        });
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(ENDPOINT)
@@ -67,9 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
         api = restAdapter.create(API.class);
 
+        getNewProduct();
+
     }
 
-    public void getNewProduct(View v) {
+    public void getNewProduct() {
         isViewingProduct = true;
         api.getProduct(getRandomDay(), new Callback<JsonObject>() {
                     @Override
@@ -91,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.i(TAG, "error Message " + error.getMessage());
                         Snackbar.make(findViewById(R.id.container),
                                 R.string.error,
                                 Snackbar.LENGTH_LONG).show();
@@ -111,12 +106,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (isViewingProduct) {
-            getMenuInflater().inflate(R.menu.menu_main_product_view, menu);
-            return true;
-        } else {
             getMenuInflater().inflate(R.menu.menu_main, menu);
             return true;
         }
+        return false;
     }
 
     @Override
@@ -128,10 +121,16 @@ public class MainActivity extends AppCompatActivity {
                                 WebViewFragment.newInstance(product.getDiscussion_url()))
                         .commit();
                 return true;
+            case R.id.action_share:
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, product.getRedirect_url());
+                sendIntent.setType("text/plain");
+                startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.action_share)));
+                return true;
             case R.id.action_product_web:
                 startActivity(new Intent(Intent.ACTION_VIEW,
                         Uri.parse(product.getRedirect_url())));
-
                 return true;
             case R.id.action_discussion_web:
                 startActivity(new Intent(Intent.ACTION_VIEW,
@@ -144,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show(fragmentManager, null);
                 return true;
             default:
-
                 return super.onOptionsItemSelected(item);
         }
     }

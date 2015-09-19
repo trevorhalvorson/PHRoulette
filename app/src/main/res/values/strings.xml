@@ -6,5 +6,8 @@
     <string name="action_product_web">View Product on Web</string>
     <string name="action_discussion_web">View Discussion on Web</string>
     <string name="action_load_discussion">View PH Discussion</string>
-    <string name="action_about">About</string>
+    <string name="action_about_title">About</string>
+    <string name="about_text">PH Roulette is an open source ProductHunt.com product viewer.
+    Randomly browse products submitted on ProductHunt and find something awesome today!</string>
+    <string name="action_share">Share Product Link</string>
 </resources>
