@@ -36,7 +36,7 @@ public class WebViewFragment extends Fragment {
                 (ProgressBar) rootView.findViewById(R.id.web_view_progress_bar);
         progressBar.setMax(100);
         progressBar.getProgressDrawable()
-                .setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+                .setColorFilter(getResources().getColor(R.color.primary), PorterDuff.Mode.SRC_IN);
 
         webView = (WebView) rootView.findViewById(R.id.web_view);
         webView.loadUrl(getArguments().getString("url"));

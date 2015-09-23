@@ -6,9 +6,9 @@ PH Roulette is an open source [Product Hunt](http://www.producthunt.com/) produc
 
 Inspired by [entroPHy](http://entrophy.goel.im/) by [Karan Goel](https://github.com/karan)
 
-![ScreenShot](/screenshots/screenshot_main.png)
+![ScreenShot](/screenshots/screenshot1.png)
 
-![ScreenShot](/screenshots/screenshot_ph.png)
+![ScreenShot](/screenshots/screenshot2.png)
 
 # Contact
 

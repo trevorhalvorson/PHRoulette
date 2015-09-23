@@ -9,4 +9,4 @@
     android:layout_gravity="end|bottom"
     android:layout_margin="16dp"
     android:src="@drawable/ic_autorenew_white_24dp"
-    app:backgroundTint="@color/colorAccent"/>
+    app:backgroundTint="@color/accent"/>
